@@ -9,9 +9,16 @@ This project aims to provide easy, Low code and automated way of deploying Real-
 
 [Full List of Fabric APIs](https://learn.microsoft.com/en-us/rest/api/fabric/articles/)
 
+Currently Eventhouse and Eventstream accelerators is added in this project. Look out for accelerators for Activator as soon as the APIs are available. 
+Jump to the relavent section by using the links below
+[Eventhouse]
+[Eventstream]
+
+# Eventhouse
+
 [Eventhouse and KQL DB APIs Blog](https://blog.fabric.microsoft.com/en-us/blog/using-apis-with-fabric-real-time-analytics/)
 ## Instructions
-Currently Eventhouse accelerator is added in this project. Look out for accelerators for Eventstream and Data Activator as soon as the APIs are available. To create Eventhouse and its entities, run the PowerShell script with following parameters
+To create Eventhouse and its entities, run the PowerShell script with following parameters
 
 |Parameter|Mandatory?|Description|
 |--------|--------|----------|
@@ -38,3 +45,37 @@ Update-AzConfig -DefaultSubscriptionForLogin "My_Subscription_Name"
 * Example of Eventhouse, KQL Database, table and a function created using this Powershell script
 
   ![Eventhouse](https://github.com/SuryaTejJosyula/FabricRTI_Accelerator/blob/main/Assets/Created_Entities.png)
+
+# Eventstream
+
+[Eventhouse APIs Docs](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-streams/eventstream-rest-api#create-eventstream-item-with-definition)
+## Instructions
+To create Eventstream with definition of source , destination and processing, run the PowerShell script with following parameters
+
+|Parameter|Mandatory?|Description|
+|--------|--------|----------|
+|tenantId|Yes|Tenant ID of your Fabric tenant|
+|workspaceId|	Yes	|Workspace ID where you want to create Eventstream|
+|eventstreamCreateFileName |	Yes|	Filename of json which contains definition placed in same folder as this script|
+
+* Make sure you have Azure modules installed in Powershell.
+ ```
+	Install-Module Az 
+```
+Please follow the steps below in order to create the right payload for Eventstream definition
+* Use the EventstreamDefinition.json file as a base to create the source, destination and processing blocks. You can use the samples present in [Eventstream definition](https://github.com/microsoft/fabric-event-streams/blob/main/API%20Templates/eventstream-definition.json) github repo to further modify each definition. A test definition file is also provided in this repo - EventstreamDefinition.json . This creates a Eventstream with the name AutoDeployES2 with Bicycle Sample data as source and an already created Eventhouse as destination.
+* Once the definition is ready, use https://www.base64encode.org/ to encode it into base64 string.
+* Use this string as part of "payload" in EventstreamCreate.json . A place holder for pasting the above base64 definition is given in the example file provided in this repo.
+* Make sure you have the Eventstream create file(EventstreamCreate.json) with definition in the same folder as the Powershell script.  
+* The script will open an interactive login window and then ask for a selection of tenant and subscription (Yes! You must select subscription although you are working with Fabric). You can set any default subscription for subsequent runs 
+```
+Update-AzConfig -DefaultSubscriptionForLogin "My_Subscription_Name" 
+```
+* To run the script,
+```
+.\createEventstream.ps1 -tenantId 'xxxxxx-yyyy-aaaa-bbbb-aaaaaaaaa'  -workspaceId 'xxxxx-yyyy-yyyy-aaaa-aaaaaaaaaaaa' -eventstreamCreateFileName 'EventstreamCreate.json'
+```
+
+* Example of Eventstream created along with defined topology
+
+  ![Eventhouse](https://github.com/SuryaTejJosyula/FabricRTI_Accelerator/blob/main/Assets/Eventstream_Created.png)
